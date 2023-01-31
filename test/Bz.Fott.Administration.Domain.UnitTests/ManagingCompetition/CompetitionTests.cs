@@ -21,7 +21,7 @@ public class CompetitionTests
     }
 
     [Fact]
-    public void Create_ShouldHasStartAndFinishCheckpoint()
+    public void Create_ShouldHaveStartAndFinishCheckpoint()
     {
         // Arrange & Act
         var competition = new Competition(
@@ -62,6 +62,45 @@ public class CompetitionTests
         Assert.Equal(CompetitionStatus.OpenedForRegistration, competition.Status);
         Assert.Equal(1, competition.GetDomainEvents().Count);
         Assert.IsType<CompetitionOpenedForRegistration>(competition.GetDomainEvents().First());
+    }
+
+    [Fact]
+    public void OpenRegistration_ShouldThrowCannotOpenRegistrationException_IfCompetitionIsInOpenedForRegistrationState()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", 123, 321));
+        competition.OpenRegistration();
+
+        // Act
+        Action action = () => competition.OpenRegistration();
+
+        // Assert
+        var ex = Assert.Throws<CannotOpenRegistrationException>(action);
+    }
+
+    [Fact]
+    public void OpenRegistration_ShouldThrowCannotOpenRegistrationException_IfCompetitionIsInRegistrationCompletedState()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", 123, 321));
+        competition.OpenRegistration();
+        competition.CompleteRegistration();
+
+        // Act
+        Action action = () => competition.OpenRegistration();
+
+        // Assert
+        var ex = Assert.Throws<CannotOpenRegistrationException>(action);
     }
 
     [Fact]
@@ -165,5 +204,43 @@ public class CompetitionTests
         // Assert
         Assert.Equal(CompetitionStatus.RegistrationCompleted, competition.Status);
         Assert.Contains(competition.GetDomainEvents(), e => e is CompetitionRegistrationCompleted);
+    }
+
+    [Fact]
+    public void CompleteRegistration_ShouldThrowCannotCompleteRegistrationException_IfCompetitionIsInDraftState()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", 123, 321));
+
+        // Act
+        Action action = () => competition.CompleteRegistration();
+
+        // Assert
+        var ex = Assert.Throws<CannotCompleteRegistrationException>(action);
+    }
+
+    [Fact]
+    public void CompleteRegistration_ShouldThrowCannotCompleteRegistrationException_IfCompetitionIsInRegistrationCompletedState()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", 123, 321));
+        competition.OpenRegistration();
+        competition.CompleteRegistration();
+
+        // Act
+        Action action = () => competition.CompleteRegistration();
+
+        // Assert
+        var ex = Assert.Throws<CannotCompleteRegistrationException>(action);
     }
 }

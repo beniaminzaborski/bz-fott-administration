@@ -51,7 +51,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
 
     public void OpenRegistration()
     {
-        if (Status != CompetitionStatus.Draft) return;
+        if (Status != CompetitionStatus.Draft) throw new CannotOpenRegistrationException();
 
         Status = CompetitionStatus.OpenedForRegistration;
         QueueDomainEvent(new CompetitionOpenedForRegistration());
@@ -59,7 +59,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
 
     public void CompleteRegistration() 
     {
-        if (Status != CompetitionStatus.OpenedForRegistration) return;
+        if (Status != CompetitionStatus.OpenedForRegistration) throw new CannotCompleteRegistrationException();
 
         Status = CompetitionStatus.RegistrationCompleted;
         QueueDomainEvent(new CompetitionRegistrationCompleted());
