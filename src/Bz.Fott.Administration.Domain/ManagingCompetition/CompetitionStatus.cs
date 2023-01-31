@@ -3,5 +3,7 @@
 public enum CompetitionStatus
 {
     Draft = 0,
-    Approved = 1
+    OpenedForRegistration = 1,
+    RegistrationCompleted = 2,
+    Closed = 3
 }

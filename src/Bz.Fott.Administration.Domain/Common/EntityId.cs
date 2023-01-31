@@ -2,10 +2,10 @@
 
 public abstract record EntityId<TId>
 {
-	public EntityId(TId id)
+	public EntityId(TId value)
 	{
-		Id = id;
+		Value = value;
 	}
 
-    public TId Id { get; init; }
+    public TId Value { get; init; }
 }

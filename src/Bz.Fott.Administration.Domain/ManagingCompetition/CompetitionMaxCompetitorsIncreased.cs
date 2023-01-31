@@ -2,7 +2,7 @@
 
 namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
-public class CompetitionApproved : IDomainEvent
+public class CompetitionMaxCompetitorsIncreased : IDomainEvent
 {
 
 }

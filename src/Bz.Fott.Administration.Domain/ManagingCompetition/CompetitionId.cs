@@ -4,10 +4,10 @@ namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
 public record CompetitionId : EntityId<Guid>
 {
-    public CompetitionId(Guid id) : base(id) { }
+    public CompetitionId(Guid value) : base(value) { }
 
-    public static CompetitionId From(Guid id)
+    public static CompetitionId From(Guid value)
     { 
-        return new CompetitionId(id);
+        return new CompetitionId(value);
     }
 }

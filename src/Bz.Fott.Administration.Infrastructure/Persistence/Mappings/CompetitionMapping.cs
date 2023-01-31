@@ -13,7 +13,7 @@ internal class CompetitionMapping : IEntityTypeConfiguration<Competition>
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Id)
             .HasColumnName("id")
-            .HasConversion(entityId => entityId.Id, dbId => new CompetitionId(dbId));
+            .HasConversion(entityId => entityId.Value, dbId => new CompetitionId(dbId));
 
         builder.OwnsOne(e => e.Distance,
             navigationBuilder => 
@@ -44,5 +44,8 @@ internal class CompetitionMapping : IEntityTypeConfiguration<Competition>
         builder.Property(e => e.StartAt).HasColumnName("startAt");
         builder.Property(e => e.MaxCompetitors).HasColumnName("maxCompetitors");
         builder.Property(e => e.Status).HasColumnName("status").HasColumnType("tinyint");
+
+        // TODO: Map Checkpoints
+        builder.Ignore(e => e.Checkpoints);
     }
 }

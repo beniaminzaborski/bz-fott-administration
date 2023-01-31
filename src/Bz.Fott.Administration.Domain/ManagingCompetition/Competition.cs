@@ -21,6 +21,9 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         MaxCompetitors = maxCompetitors;
         Place = place;
         Status = CompetitionStatus.Draft;
+
+        AddCheckpoint(CreateStartLineCheckpoint());
+        AddCheckpoint(CreateFinishLineCheckpoint());
     }
 
     public Distance Distance { get; private set; }
@@ -33,10 +36,61 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
 
     public CompetitionStatus Status { get; private set; }
 
-    public void Approve()
-    {
-        Status = CompetitionStatus.Approved;
+    private IList<Checkpoint> _checkpoints = new List<Checkpoint>();
+    public IReadOnlyCollection<Checkpoint> Checkpoints => _checkpoints.OrderBy(c => c.TrackPoint.Amount).ToList().AsReadOnly();
 
-        QueueDomainEvent(new CompetitionApproved());
+    public void AddCheckpoint(Checkpoint checkpoint)
+    { 
+        _checkpoints.Add(checkpoint);
+    }
+
+    public void RemoveCheckpoint(Checkpoint checkpoint)
+    { 
+        _checkpoints.Remove(checkpoint);
+    }
+
+    public void OpenRegistration()
+    {
+        if (Status != CompetitionStatus.Draft) return;
+
+        Status = CompetitionStatus.OpenedForRegistration;
+        QueueDomainEvent(new CompetitionOpenedForRegistration());
+    }
+
+    public void CompleteRegistration() 
+    {
+        if (Status != CompetitionStatus.OpenedForRegistration) return;
+
+        Status = CompetitionStatus.RegistrationCompleted;
+        QueueDomainEvent(new CompetitionRegistrationCompleted());
+    }
+
+    public void ChangeMaxCompetitors(int maxCompetitors)
+    {
+        if ((Status == CompetitionStatus.Draft
+            || Status == CompetitionStatus.OpenedForRegistration)
+            && maxCompetitors > MaxCompetitors)
+        { 
+            MaxCompetitors = maxCompetitors;
+            QueueDomainEvent(new CompetitionMaxCompetitorsIncreased());
+        }
+        else if (Status == CompetitionStatus.Draft
+            && maxCompetitors < MaxCompetitors)
+        {
+            MaxCompetitors = maxCompetitors;
+            QueueDomainEvent(new CompetitionMaxCompetitorsDecreased());
+        }
+        else
+            throw new CompetitionMaxCompetitorsChangeNotAllowedException();
+    }
+
+    private Checkpoint CreateStartLineCheckpoint()
+    {
+        return new Checkpoint(new Distance(0, Distance.Unit));
+    }
+
+    private Checkpoint CreateFinishLineCheckpoint()
+    {
+        return new Checkpoint(new Distance(Distance.Amount, Distance.Unit));
     }
 }

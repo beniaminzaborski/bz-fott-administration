@@ -1,5 +1,6 @@
-﻿using Bz.Fott.Administration.Application.Services;
+﻿using Bz.Fott.Administration.Application.Competitions;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Bz.Fott.Administration.WebAPI.Controllers;
 
@@ -15,10 +16,37 @@ public class CompetitionController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create()
+    [ProducesResponseType((int)HttpStatusCode.Created)]
+    public async Task<IActionResult> CreateAsync()
     {
-        await _competitionService.CreateCompetitionAsync();
+        var id = await _competitionService.CreateCompetitionAsync();
+        return CreatedAtAction(nameof(GetAsync), new { id }, null);
+    }
 
-        return Ok();
+    [HttpGet("{id:Guid}")]
+    [ProducesResponseType(typeof(CompetitionDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> GetAsync(Guid id)
+    { 
+        var dto = await _competitionService.GetCompetitionAsync(id);
+        return Ok(dto);
+    }
+
+    [HttpPost("{id:Guid}/Registration/Open")]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> OpenRegistrationAsync(Guid id)
+    {
+        await _competitionService.OpenRegistrationAsync(id);
+        return NoContent();
+    }
+
+    [HttpPost("{id:Guid}/Registration/Complete")]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> CompleteRegistrationAsync(Guid id)
+    {
+        await _competitionService.CompleteRegistrationAsync(id);
+        return NoContent();
     }
 }

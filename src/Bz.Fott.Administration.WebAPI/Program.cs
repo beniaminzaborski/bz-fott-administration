@@ -1,6 +1,6 @@
 using Bz.Fott.Administration.Application;
 using Bz.Fott.Administration.Infrastructure;
-using MediatR;
+using Bz.Fott.Administration.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -12,7 +12,7 @@ services
     .AddInfrastructure(config)
     .AddEndpointsApiExplorer()
     .AddSwaggerGen()
-    .AddControllers();
+    .AddCustomControllers();
 
 var app = builder.Build();
 
