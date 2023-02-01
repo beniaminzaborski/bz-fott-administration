@@ -2,14 +2,18 @@
 
 namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
-public class Checkpoint : Entity<Guid>
+public class Checkpoint : Entity<CheckpointId>
 {
     private Checkpoint() { }
 
-    public Checkpoint(Distance trackPoint)
+    public Checkpoint(CheckpointId id, CompetitionId competitionId, Distance trackPoint)
 	{
+        Id = id;
+        CompetitionId = competitionId;
         TrackPoint = trackPoint;
 	}
+
+    public CompetitionId CompetitionId { get; init; }
 
     public Distance TrackPoint { get; init; }
 }

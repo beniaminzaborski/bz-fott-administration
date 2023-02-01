@@ -39,7 +39,7 @@ internal class CompetitionService : ICompetitionService
 
     public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
     {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
+        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
         if (competition is null) throw new Exception(); //NotFoundException("id");
         return new CompetitionDto
         {
@@ -51,7 +51,8 @@ internal class CompetitionService : ICompetitionService
             City = competition.Place.City,
             Latitude = competition.Place.Latitude,
             Longitute = competition.Place.Longitute,
-            Status = competition.Status.ToString()
+            Status = competition.Status.ToString(),
+            Checkpoints = competition.Checkpoints.Select(c => new CheckpointDto { Id = c.Id.Value, TrackPointAmount = c.TrackPoint.Amount, TrackPointUnit = c.TrackPoint.Unit.ToString() })
         };
     }
 

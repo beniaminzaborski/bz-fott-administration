@@ -86,11 +86,11 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
 
     private Checkpoint CreateStartLineCheckpoint()
     {
-        return new Checkpoint(new Distance(0, Distance.Unit));
+        return new Checkpoint(CheckpointId.From(Guid.NewGuid()), Id, new Distance(0, Distance.Unit));
     }
 
     private Checkpoint CreateFinishLineCheckpoint()
     {
-        return new Checkpoint(new Distance(Distance.Amount, Distance.Unit));
+        return new Checkpoint(CheckpointId.From(Guid.NewGuid()), Id, new Distance(Distance.Amount, Distance.Unit));
     }
 }

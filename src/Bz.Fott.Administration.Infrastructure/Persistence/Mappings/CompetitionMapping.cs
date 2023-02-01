@@ -45,7 +45,13 @@ internal class CompetitionMapping : IEntityTypeConfiguration<Competition>
         builder.Property(e => e.MaxCompetitors).HasColumnName("maxCompetitors");
         builder.Property(e => e.Status).HasColumnName("status").HasColumnType("tinyint");
 
-        // TODO: Map Checkpoints
-        builder.Ignore(e => e.Checkpoints);
+        builder.HasMany(e => e.Checkpoints)
+               .WithOne()
+               .IsRequired()
+               .HasForeignKey(c => c.CompetitionId)
+               .OnDelete(DeleteBehavior.Cascade);
+        builder.Metadata
+               .FindNavigation("Checkpoints")
+               .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
