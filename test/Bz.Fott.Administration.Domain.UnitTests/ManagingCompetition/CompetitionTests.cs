@@ -14,7 +14,7 @@ public class CompetitionTests
           DistanceHelper.Marathon(),
           new DateTime(2032, 02, 08, 10, 00, 00),
           8000,
-          new CompetitionPlace("Kielce", 123, 321));
+          new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Assert
         Assert.Equal(CompetitionStatus.Draft, competition.Status);
@@ -29,7 +29,7 @@ public class CompetitionTests
           DistanceHelper.Marathon(),
           new DateTime(2032, 02, 08, 10, 00, 00),
           8000,
-          new CompetitionPlace("Kielce", 123, 321));
+          new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Assert
         var checkpoints = competition.Checkpoints;
@@ -53,7 +53,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Act
         competition.OpenRegistration();
@@ -73,7 +73,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
 
         // Act
@@ -92,7 +92,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
         competition.CompleteRegistration();
 
@@ -112,7 +112,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Act
         competition.ChangeMaxCompetitors(10000);
@@ -133,7 +133,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Act
         competition.ChangeMaxCompetitors(7000);
@@ -154,7 +154,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
 
         // Act
@@ -175,7 +175,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
 
         // Act
@@ -195,7 +195,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
 
         // Act
@@ -215,7 +215,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         // Act
         Action action = () => competition.CompleteRegistration();
@@ -233,7 +233,7 @@ public class CompetitionTests
            DistanceHelper.Marathon(),
            new DateTime(2032, 02, 08, 10, 00, 00),
            8000,
-           new CompetitionPlace("Kielce", 123, 321));
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
         competition.OpenRegistration();
         competition.CompleteRegistration();
 

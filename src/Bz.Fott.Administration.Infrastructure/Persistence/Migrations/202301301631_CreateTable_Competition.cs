@@ -17,8 +17,8 @@ public class _202301301631_CreateTable_Competition : Migration
             .WithColumn("distanceAmount").AsDecimal().NotNullable()
             .WithColumn("distanceUnit").AsByte().NotNullable()
             .WithColumn("city").AsAnsiString(100).NotNullable()
-            .WithColumn("placeLongitute").AsInt32().NotNullable()
-            .WithColumn("placeLatitude").AsInt32().NotNullable()
+            .WithColumn("placeLongitude").AsDecimal(11, 8).NotNullable()
+            .WithColumn("placeLatitude").AsDecimal(10, 8).NotNullable()
             .WithColumn("startAt").AsDateTime().NotNullable()
             .WithColumn("maxCompetitors").AsInt32().NotNullable()
             .WithColumn("status").AsByte().NotNullable();

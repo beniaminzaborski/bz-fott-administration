@@ -2,14 +2,14 @@
 
 public record CompetitionPlace
 {
-    public CompetitionPlace(string city, int longitute, int latitude)
+    private CompetitionPlace() { }
+
+    public CompetitionPlace(string city, Geolocalization localization)
     {
         City = city;
-        Longitute = longitute;
-        Latitude = latitude;
+        Localization = localization;
     }
 
     public string City { get; init; }
-    public int Longitute { get; init; }
-    public int Latitude { get; init; }
+    public Geolocalization Localization { get; init; }
 }

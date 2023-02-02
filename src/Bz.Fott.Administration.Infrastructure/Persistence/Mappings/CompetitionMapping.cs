@@ -33,12 +33,22 @@ internal class CompetitionMapping : IEntityTypeConfiguration<Competition>
                 navigationBuilder
                     .Property(place => place.City)
                     .HasColumnName("city");
-                navigationBuilder
-                    .Property(place => place.Longitute)
-                    .HasColumnName("placeLongitute");
-                navigationBuilder
-                    .Property(place => place.Latitude)
-                    .HasColumnName("placeLatitude");
+                navigationBuilder.OwnsOne(p => p.Localization,
+                    placeNavigationBuilder =>
+                    {
+                        placeNavigationBuilder
+                            .Property(loc => loc.Latitude)
+                            .HasColumnName("placeLatitude");
+                        placeNavigationBuilder
+                            .Property(loc => loc.Longitude)
+                            .HasColumnName("placeLongitude");
+                    });
+                //navigationBuilder
+                //    .Property(place => place.Longitute)
+                //    .HasColumnName("placeLongitute");
+                //navigationBuilder
+                //    .Property(place => place.Latitude)
+                //    .HasColumnName("placeLatitude");
             });
 
         builder.Property(e => e.StartAt).HasColumnName("startAt");

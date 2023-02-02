@@ -27,7 +27,7 @@ internal class CompetitionService : ICompetitionService
             DistanceHelper.Marathon(),
             new DateTime(2032, 02, 08, 10, 00, 00),
             8000,
-            new CompetitionPlace("Kielce", 123, 321));
+            new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
         competition.OpenRegistration();
 
@@ -45,12 +45,18 @@ internal class CompetitionService : ICompetitionService
         {
             Id = competition.Id.Value,
             StartAt = competition.StartAt,
-            DistanceAmount = competition.Distance.Amount,
-            DistanceUnit = competition.Distance.Unit.ToString(),
+            Distance = new DistanceDto
+            { 
+                Amount = competition.Distance.Amount,
+                Unit = competition.Distance.Unit.ToString()
+            },
             MaxCompetitors = competition.MaxCompetitors,
-            City = competition.Place.City,
-            Latitude = competition.Place.Latitude,
-            Longitute = competition.Place.Longitute,
+            Place = new CompetitionPlaceDto 
+            { 
+                City = competition.Place.City,
+                Latitude = competition.Place.Localization.Latitude,
+                Longitute = competition.Place.Localization.Longitude
+            },
             Status = competition.Status.ToString(),
             Checkpoints = competition.Checkpoints.Select(c => new CheckpointDto { Id = c.Id.Value, TrackPointAmount = c.TrackPoint.Amount, TrackPointUnit = c.TrackPoint.Unit.ToString() })
         };
