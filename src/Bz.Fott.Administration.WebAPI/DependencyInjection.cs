@@ -1,4 +1,6 @@
-﻿namespace Bz.Fott.Administration.WebAPI;
+﻿using Bz.Fott.Administration.WebAPI.ExceptionsHandling;
+
+namespace Bz.Fott.Administration.WebAPI;
 
 public static class DependencyInjection
 {
@@ -6,7 +8,7 @@ public static class DependencyInjection
     {
         services.AddControllers(options =>
         {
-            //options.Filters.Add(typeof(GlobalExceptionFilter));
+            options.Filters.Add(typeof(GlobalExceptionFilter));
             options.SuppressAsyncSuffixInActionNames = false;
         });
 

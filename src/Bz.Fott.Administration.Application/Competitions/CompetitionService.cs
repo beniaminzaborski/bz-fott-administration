@@ -1,4 +1,5 @@
 ﻿using Bz.Fott.Administration.Application.Common;
+using Bz.Fott.Administration.Application.Common.Exceptions;
 using Bz.Fott.Administration.Domain.ManagingCompetition;
 using Bz.Fott.Administration.Domain.Utils;
 
@@ -29,8 +30,6 @@ internal class CompetitionService : ICompetitionService
             8000,
             new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
 
-        competition.OpenRegistration();
-
         await _competitionRepository.CreateAsync(competition);
         await _unitOfWork.CommitAsync();
 
@@ -40,7 +39,7 @@ internal class CompetitionService : ICompetitionService
     public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
     {
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
-        if (competition is null) throw new Exception(); //NotFoundException("id");
+        if (competition is null) throw new NotFoundException();
         return new CompetitionDto
         {
             Id = competition.Id.Value,
@@ -58,14 +57,15 @@ internal class CompetitionService : ICompetitionService
                 Longitute = competition.Place.Localization.Longitude
             },
             Status = competition.Status.ToString(),
-            Checkpoints = competition.Checkpoints.Select(c => new CheckpointDto { Id = c.Id.Value, TrackPointAmount = c.TrackPoint.Amount, TrackPointUnit = c.TrackPoint.Unit.ToString() })
+            Checkpoints = competition.Checkpoints
+                .Select(c => new CheckpointDto { Id = c.Id.Value, TrackPointAmount = c.TrackPoint.Amount, TrackPointUnit = c.TrackPoint.Unit.ToString() })
         };
     }
 
     public async Task OpenRegistrationAsync(Guid id)
     {
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
-        if (competition is null) throw new Exception(); //NotFoundException("id");
+        if (competition is null) throw new NotFoundException();
 
         competition.OpenRegistration();
 
@@ -76,7 +76,7 @@ internal class CompetitionService : ICompetitionService
     public async Task CompleteRegistrationAsync(Guid id)
     {
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
-        if (competition is null) throw new Exception(); //NotFoundException("id");
+        if (competition is null) throw new NotFoundException();
 
         competition.CompleteRegistration();
 
