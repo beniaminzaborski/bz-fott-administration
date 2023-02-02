@@ -1,0 +1,1 @@
+CREATE DATABASE fott_administration;

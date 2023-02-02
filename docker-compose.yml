@@ -1,0 +1,23 @@
+version: '3.4'
+
+services:
+  # Infrastructure
+
+  # TODO: PostgreSQL
+  postgres:
+    image: postgres
+    container_name: fott-postgres
+
+  # TODO: RabbitMQ
+
+  # TODO: OpenTelemetry Collector
+
+  # TODO: Jaeger
+
+  # Application
+  bz.fott.administration.webapi:
+    image: ${DOCKER_REGISTRY-}bzfottadministrationwebapi
+    container_name: fott-admin
+    build:
+      context: .
+      dockerfile: src/Bz.Fott.Administration.WebAPI/Dockerfile
