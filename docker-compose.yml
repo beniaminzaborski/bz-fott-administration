@@ -11,6 +11,10 @@ services:
   # TODO: RabbitMQ
 
   # TODO: OpenTelemetry Collector
+  otel.collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: fott-otel-collector
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
 
   # TODO: Jaeger
 
