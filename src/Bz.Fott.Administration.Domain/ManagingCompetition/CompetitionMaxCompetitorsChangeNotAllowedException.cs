@@ -2,5 +2,9 @@
 
 public class CompetitionMaxCompetitorsChangeNotAllowedException : Exception
 {
-	//public CompetitionMaxCompetitorsChangeNotAllowedException() : base() { }
+    public CompetitionMaxCompetitorsChangeNotAllowedException() { }
+
+    public CompetitionMaxCompetitorsChangeNotAllowedException(string message) : base(message) { }
+
+    public CompetitionMaxCompetitorsChangeNotAllowedException(string message, Exception inner) : base(message, inner) { }
 }
