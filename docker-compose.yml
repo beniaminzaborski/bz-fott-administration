@@ -2,21 +2,48 @@ version: '3.4'
 
 services:
   # Infrastructure
-
-  # TODO: PostgreSQL
   postgres:
     image: postgres
     container_name: fott-postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./.docker/postgres/data:/var/lib/postgresql/data
+      - ./deploy/sql/create_databases.sql:/docker-entrypoint-initdb.d/create_databases.sql
 
   # TODO: RabbitMQ
 
-  # TODO: OpenTelemetry Collector
-  otel.collector:
+  otel-collector:
     image: otel/opentelemetry-collector:latest
     container_name: fott-otel-collector
     command: [ "--config=/etc/otel-collector-config.yaml" ]
+    ports:
+      - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP http receiver
+    volumes:
+      - ./deploy/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    depends_on:
+      - fott-otel-collector
 
   # TODO: Jaeger
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:latest
+    container_name: fott-jaeger
+    restart: on-failure
+    ports:
+      - 5775:5775/udp
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 5778:5778
+      - 16686:16686
+      - 14268:14268
+      - 14250:14250
+      - 9411:9411
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
 
   # Application
   bz.fott.administration.webapi:
@@ -25,3 +52,18 @@ services:
     build:
       context: .
       dockerfile: src/Bz.Fott.Administration.WebAPI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__Administration=Server=fott-postgres;Port=5432;Database=fott_administration;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://fott-otel-collector:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+    ports:
+      - "80"
+      - "443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    depends_on:
+      - fott-postgres
+      - fott-otel-collector

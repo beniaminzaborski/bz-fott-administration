@@ -3,6 +3,7 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using OpenTelemetry;
+using Npgsql;
 
 namespace Bz.Fott.Administration.WebAPI;
 
@@ -27,6 +28,7 @@ public static class DependencyInjection
                 .AddSource(serviceName)
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: serviceVersion))
                 .AddAspNetCoreInstrumentation()
+                .AddNpgsql()
                 .AddConsoleExporter()
                 .AddOtlpExporter())
             .WithMetrics(builder => builder
