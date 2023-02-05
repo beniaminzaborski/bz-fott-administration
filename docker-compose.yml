@@ -1,7 +1,9 @@
 version: '3.4'
 
 services:
+
   # Infrastructure
+
   postgres:
     image: postgres
     container_name: fott-postgres
@@ -13,22 +15,13 @@ services:
       - ./.docker/postgres/data:/var/lib/postgresql/data
       - ./deploy/sql/create_databases.sql:/docker-entrypoint-initdb.d/create_databases.sql
 
-  # TODO: RabbitMQ
-
-  otel-collector:
-    image: otel/opentelemetry-collector:latest
-    container_name: fott-otel-collector
-    command: [ "--config=/etc/otel-collector-config.yaml" ]
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: fott-rabbitmq
     ports:
-      - "13133:13133" # health_check extension
-      - "4317:4317"   # OTLP gRPC receiver
-      - "4318:4318"   # OTLP http receiver
-    volumes:
-      - ./deploy/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    depends_on:
-      - fott-otel-collector
+      - 5672:5672
+      - 15672:15672
 
-  # TODO: Jaeger
   jaeger-all-in-one:
     image: jaegertracing/all-in-one:latest
     container_name: fott-jaeger
@@ -45,7 +38,22 @@ services:
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
 
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: fott-otel-collector
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    ports:
+      - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP http receiver
+    volumes:
+      - ./deploy/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    depends_on:
+      - fott-jaeger
+
+
   # Application
+
   bz.fott.administration.webapi:
     image: ${DOCKER_REGISTRY-}bzfottadministrationwebapi
     container_name: fott-admin
@@ -56,6 +64,11 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__Administration=Server=fott-postgres;Port=5432;Database=fott_administration;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - RabbitMQ__Host=fott-rabbitmq
+      - RabbitMQ__Port=5672
+      - RabbitMQ__VirtualHost=/
+      - RabbitMQ__Username=guest
+      - RabbitMQ__Password=guest
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://fott-otel-collector:4317
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
     ports:
@@ -66,4 +79,5 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     depends_on:
       - fott-postgres
+      - fott-rabbitmq
       - fott-otel-collector

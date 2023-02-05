@@ -4,6 +4,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Metrics;
 using OpenTelemetry;
 using Npgsql;
+using Microsoft.Extensions.Configuration;
 
 namespace Bz.Fott.Administration.WebAPI;
 

@@ -2,6 +2,7 @@
 using Bz.Fott.Administration.Infrastructure.Persistence;
 using Bz.Fott.Administration.Infrastructure.Persistence.Common;
 using FluentMigrator.Runner;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
     {
         return service
-            .AddPersistence(configuration);
+            .AddPersistence(configuration)
+            .AddMessageBus(configuration);
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
@@ -53,5 +55,26 @@ public static class DependencyInjection
                         .WithGlobalConnectionString(connectionString)
                         .ScanIn(Assembly.GetExecutingAssembly()).For.All();
                 });
+    }
+
+    private static IServiceCollection AddMessageBus(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services.AddMassTransit(x =>
+        {
+            x.SetKebabCaseEndpointNameFormatter();
+
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var rabbitSettings = configuration.GetRequiredSection("RabbitMQ")!;
+
+                cfg.Host(rabbitSettings.GetValue<string>("Host"), rabbitSettings.GetValue<ushort>("Port"), rabbitSettings.GetValue<string>("VirtualHost"), h =>
+                {
+                    h.Username(rabbitSettings.GetValue<string>("Username"));
+                    h.Password(rabbitSettings.GetValue<string>("Password"));
+                });
+
+                cfg.ConfigureEndpoints(context);
+            });
+        });
     }
 }
