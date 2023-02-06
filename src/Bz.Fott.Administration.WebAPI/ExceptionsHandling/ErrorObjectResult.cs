@@ -1,6 +1,5 @@
 ﻿using Bz.Fott.Administration.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 using System.Net;
 
 namespace Bz.Fott.Administration.WebAPI.ExceptionsHandling;

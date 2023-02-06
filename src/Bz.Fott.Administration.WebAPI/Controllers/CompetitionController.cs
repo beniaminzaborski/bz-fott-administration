@@ -17,9 +17,9 @@ public class CompetitionController : ControllerBase
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateAsync()
+    public async Task<IActionResult> CreateAsync([FromBody]CreateCompetitionDto dto)
     {
-        var id = await _competitionService.CreateCompetitionAsync();
+        var id = await _competitionService.CreateCompetitionAsync(dto);
         return CreatedAtAction(nameof(GetAsync), new { id }, null);
     }
 
@@ -34,6 +34,7 @@ public class CompetitionController : ControllerBase
 
     [HttpPost("{id:Guid}/Registration/Open")]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> OpenRegistrationAsync(Guid id)
     {
@@ -43,10 +44,41 @@ public class CompetitionController : ControllerBase
 
     [HttpPost("{id:Guid}/Registration/Complete")]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> CompleteRegistrationAsync(Guid id)
     {
         await _competitionService.CompleteRegistrationAsync(id);
+        return NoContent();
+    }
+
+    [HttpPatch("{id:Guid}")]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> ChangeMaxCompetitors(Guid id, [FromBody]ChangeMaxCompetitorsRequestDto dto)
+    {
+        await _competitionService.ChangeMaxCompetitors(id, dto.MaxCompetitors);
+        return NoContent();
+    }
+
+    [HttpPost("{id:Guid}/Checkpoints")]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> AddCheckpoint(Guid id, [FromBody] AddCheckpointRequestDto dto)
+    {
+        await _competitionService.AddCheckpoint(id, dto);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:Guid}/Checkpoints/{checkpointId:Guid}")]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    public async Task<IActionResult> RemoveCheckpoint(Guid id, Guid checkpointId)
+    {
+        await _competitionService.RemoveCheckpoint(id, checkpointId);
         return NoContent();
     }
 }
