@@ -1,6 +1,7 @@
 ﻿using Bz.Fott.Administration.Application.Common;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Bz.Fott.Administration.Application;
 
@@ -12,7 +13,8 @@ public static class DependencyInjection
             .AddMediatR(
                 typeof(Application.Common.IUnitOfWork),
                 typeof(Domain.Common.IDomainEvent))
-            .AddApplicationServices();
+            .AddApplicationServices()
+            .AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)

@@ -1,4 +1,5 @@
-﻿using Bz.Fott.Administration.Application.Common;
+﻿using AutoMapper;
+using Bz.Fott.Administration.Application.Common;
 using Bz.Fott.Administration.Application.Common.Exceptions;
 using Bz.Fott.Administration.Domain.ManagingCompetition;
 using Bz.Fott.Administration.Domain.Utils;
@@ -8,13 +9,16 @@ namespace Bz.Fott.Administration.Application.Competitions;
 internal class CompetitionService : ICompetitionService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
     private readonly ICompetitionRepository _competitionRepository;
 
     public CompetitionService(
         IUnitOfWork unitOfWork,
+        IMapper mapper,
         ICompetitionRepository competitionRepository)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
         _competitionRepository = competitionRepository;
     }
 
@@ -40,26 +44,7 @@ internal class CompetitionService : ICompetitionService
     {
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
         if (competition is null) throw new NotFoundException();
-        return new CompetitionDto
-        {
-            Id = competition.Id.Value,
-            StartAt = competition.StartAt,
-            Distance = new DistanceDto
-            { 
-                Amount = competition.Distance.Amount,
-                Unit = competition.Distance.Unit.ToString()
-            },
-            MaxCompetitors = competition.MaxCompetitors,
-            Place = new CompetitionPlaceDto 
-            { 
-                City = competition.Place.City,
-                Latitude = competition.Place.Localization.Latitude,
-                Longitute = competition.Place.Localization.Longitude
-            },
-            Status = competition.Status.ToString(),
-            Checkpoints = competition.Checkpoints
-                .Select(c => new CheckpointDto { Id = c.Id.Value, TrackPointAmount = c.TrackPoint.Amount, TrackPointUnit = c.TrackPoint.Unit.ToString() })
-        };
+        return _mapper.Map<CompetitionDto>(competition);
     }
 
     public async Task OpenRegistrationAsync(Guid id)
