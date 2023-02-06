@@ -123,11 +123,18 @@ internal class CompetitionService : ICompetitionService
 
         if (!Enum.TryParse<DistanceUnit>(checkpointDto.TrackPointUnit, out var distanceUnit)) throw new ValidationException("Distance unit is incorrect");
 
-        competition.AddCheckpoint(
-            new Checkpoint(
-                CheckpointId.From(Guid.NewGuid()), 
-                CompetitionId.From(competitionId), 
-                new Distance(checkpointDto.TrackPointAmount, distanceUnit)));
+        try
+        {
+            competition.AddCheckpoint(
+                new Checkpoint(
+                    CheckpointId.From(Guid.NewGuid()),
+                    CompetitionId.From(competitionId),
+                    new Distance(checkpointDto.TrackPointAmount, distanceUnit)));
+        }
+        catch (CheckpointAlreadyExistsException)
+        {
+            throw new ValidationException("Cannot add a checkpoint because checkpoint in this place already exists");
+        }
 
         await _competitionRepository.UpdateAsync(competition);
         await _unitOfWork.CommitAsync();
@@ -138,7 +145,14 @@ internal class CompetitionService : ICompetitionService
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(competitionId), x => x.Checkpoints);
         if (competition is null) throw new NotFoundException();
 
-        competition.RemoveCheckpoint(CheckpointId.From(checkpointId));
+        try
+        {
+            competition.RemoveCheckpoint(CheckpointId.From(checkpointId));
+        }
+        catch (CheckpointNotExistsException)
+        {
+            throw new ValidationException("Cannot remove a checkpoint because checkpoint does not exist");
+        }
 
         await _competitionRepository.UpdateAsync(competition);
         await _unitOfWork.CommitAsync();

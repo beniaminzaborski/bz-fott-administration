@@ -243,4 +243,40 @@ public class CompetitionTests
         // Assert
         var ex = Assert.Throws<CannotCompleteRegistrationException>(action);
     }
+
+    [Fact]
+    public void AddCheckpoint_ShouldThrowCheckpointAlreadyExistsException_IfCheckpointWithTheSameValuesAlreadyExists()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
+
+        // Act
+        Action action = () => competition.AddCheckpoint(new Checkpoint(CheckpointId.From(Guid.NewGuid()), competition.Id, new Distance(0, DistanceUnit.Kilometers)));
+
+        // Assert
+        var ex = Assert.Throws<CheckpointAlreadyExistsException>(action);
+    }
+
+    [Fact]
+    public void RemoveCheckpoint_ShouldThrowCheckpointNotExistsException_IfCheckpointWithTheIdNotExists()
+    {
+        // Arrange
+        var competition = new Competition(
+           CompetitionId.From(new Guid("0c33c4ad-bbd3-4c94-acac-ab1907146834")),
+           DistanceHelper.Marathon(),
+           new DateTime(2032, 02, 08, 10, 00, 00),
+           8000,
+           new CompetitionPlace("Kielce", new Geolocalization(50.86022655378784m, 20.623838070358033m)));
+
+        // Act
+        Action action = () => competition.RemoveCheckpoint(CheckpointId.From(Guid.NewGuid()));
+
+        // Assert
+        var ex = Assert.Throws<CheckpointNotExistsException>(action);
+    }
 }

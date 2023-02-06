@@ -40,21 +40,16 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
     public IReadOnlyCollection<Checkpoint> Checkpoints => _checkpoints.OrderBy(c => c.TrackPoint.Amount).ToList().AsReadOnly();
 
     public void AddCheckpoint(Checkpoint checkpoint)
-    { 
-        // TODO: Check state
-        // TODO: Check checkpoint duplication
+    {
+        if (_checkpoints.Any(c => c.TrackPoint.Equals(checkpoint.TrackPoint))) throw new CheckpointAlreadyExistsException();
         _checkpoints.Add(checkpoint);
     }
 
     public void RemoveCheckpoint(CheckpointId checkpointId)
     {
         var checkpoint = _checkpoints.FirstOrDefault(c => c.Id.Equals(checkpointId));
-        // TODO: Check competition state
-        // TODO: Check if exists
-        if (checkpoint != null)
-        {
-            _checkpoints.Remove(checkpoint);
-        }
+        if(checkpoint is null) throw new CheckpointNotExistsException();
+        _checkpoints.Remove(checkpoint);
     }
 
     public void OpenRegistration()
