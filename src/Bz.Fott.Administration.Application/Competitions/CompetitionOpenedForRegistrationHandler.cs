@@ -1,4 +1,5 @@
 ﻿using Bz.Fott.Administration.Domain.ManagingCompetition;
+using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -7,18 +8,23 @@ namespace Bz.Fott.Administration.Application.Competitions;
 public class CompetitionOpenedForRegistrationHandler : INotificationHandler<CompetitionOpenedForRegistration>
 {
     private readonly ILogger<CompetitionOpenedForRegistrationHandler> _logger;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CompetitionOpenedForRegistrationHandler(ILogger<CompetitionOpenedForRegistrationHandler> logger)
+    public CompetitionOpenedForRegistrationHandler(
+        ILogger<CompetitionOpenedForRegistrationHandler> logger,
+        IPublishEndpoint publishEndpoint)
     {
         _logger = logger;
+        _publishEndpoint = publishEndpoint;
     }
 
-    public Task Handle(CompetitionOpenedForRegistration notification, CancellationToken cancellationToken)
+    public async Task Handle(CompetitionOpenedForRegistration notification, CancellationToken cancellationToken)
     {
         _logger.LogInformation("<Application Layer> Competition opened to registration by competitors!");
 
-        // TODO: Publish integrate event to notify all potential services
+        await _publishEndpoint.Publish(new CompetitionOpenedForRegistrationIntegrationEvent 
+        { 
 
-        return Task.CompletedTask;
+        });
     }
 }

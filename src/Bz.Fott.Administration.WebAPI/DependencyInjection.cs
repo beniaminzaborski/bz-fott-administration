@@ -30,7 +30,7 @@ public static class DependencyInjection
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: serviceVersion))
                 .AddAspNetCoreInstrumentation()
                 .AddNpgsql()
-                .AddMassTransitInstrumentation()
+                .AddMassTransitInstrumentation().AddSource("MassTransit")
                 .AddConsoleExporter()
                 .AddOtlpExporter())
             .WithMetrics(builder => builder
