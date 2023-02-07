@@ -1,4 +1,5 @@
 ﻿using Bz.Fott.Administration.Application.Common;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -14,7 +15,8 @@ public static class DependencyInjection
                 typeof(Application.Common.IUnitOfWork),
                 typeof(Domain.Common.IDomainEvent))
             .AddApplicationServices()
-            .AddAutoMapper(Assembly.GetExecutingAssembly());
+            .AddAutoMapper(Assembly.GetExecutingAssembly())
+            .AddValidators();
     }
 
     private static IServiceCollection AddApplicationServices(this IServiceCollection services)
@@ -24,5 +26,19 @@ public static class DependencyInjection
             .AddClasses(classes => classes.AssignableTo<IApplicationService>())
             .AsMatchingInterface()
             .WithScopedLifetime());
+    }
+
+    private static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        //services
+        //    .AddScoped<IValidatorFactory, ValidatorFactory>();
+
+        services
+            .Scan(scan => scan.FromAssemblyOf<IApplicationService>()
+            .AddClasses(classes => classes.AssignableTo(typeof(IValidator<>)))
+            .AsImplementedInterfaces(i => i.Name.StartsWith("IValidator") && i.IsGenericType)
+            .WithScopedLifetime());
+
+        return services;
     }
 }

@@ -3,6 +3,7 @@ using Bz.Fott.Administration.Application.Common;
 using Bz.Fott.Administration.Application.Common.Exceptions;
 using Bz.Fott.Administration.Domain.ManagingCompetition;
 using Bz.Fott.Administration.Domain.Utils;
+using FluentValidation;
 
 namespace Bz.Fott.Administration.Application.Competitions;
 
@@ -11,22 +12,27 @@ internal class CompetitionService : ICompetitionService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
     private readonly ICompetitionRepository _competitionRepository;
+    private readonly IValidator<CreateCompetitionDto> _createCompetitionDtoValidator;
+    private readonly IValidator<AddCheckpointRequestDto> _addCheckpointRequestDtoValidator;
 
     public CompetitionService(
         IUnitOfWork unitOfWork,
         IMapper mapper,
-        ICompetitionRepository competitionRepository)
+        ICompetitionRepository competitionRepository,
+        IValidator<CreateCompetitionDto> createCompetitionDtoValidator,
+        IValidator<AddCheckpointRequestDto> addCheckpointRequestDtoValidator)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _competitionRepository = competitionRepository;
+        _createCompetitionDtoValidator = createCompetitionDtoValidator;
+        _addCheckpointRequestDtoValidator = addCheckpointRequestDtoValidator;
     }
 
     public async Task<Guid> CreateCompetitionAsync(CreateCompetitionDto dto)
     {
-        // TODO: Validate DTO
+        await _createCompetitionDtoValidator.ValidateAndThrowAsync(dto);
 
-        // TODO: Map DTO to Entity
         var competition = new Competition(
             CompetitionId.From(Guid.NewGuid()),
             DistanceHelper.From(dto.Distance.Amount, dto.Distance.Unit),
@@ -58,7 +64,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (CannotOpenRegistrationException)
         {
-            throw new ValidationException("Cannot open registration");
+            throw new Common.Exceptions.ValidationException("Cannot open registration");
         }
 
         await _competitionRepository.UpdateAsync(competition);
@@ -76,7 +82,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (CannotCompleteRegistrationException)
         {
-            throw new ValidationException("Cannot complete registration");
+            throw new Common.Exceptions.ValidationException("Cannot complete registration");
         }
 
         await _competitionRepository.UpdateAsync(competition);
@@ -94,7 +100,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (CompetitionMaxCompetitorsChangeNotAllowedException)
         {
-            throw new ValidationException("Changing maximum numbers of competitors is not allowed");
+            throw new Common.Exceptions.ValidationException("Changing maximum numbers of competitors is not allowed");
         }
 
         await _competitionRepository.UpdateAsync(competition);
@@ -103,10 +109,12 @@ internal class CompetitionService : ICompetitionService
 
     public async Task AddCheckpoint(Guid competitionId, AddCheckpointRequestDto checkpointDto)
     {
+        await _addCheckpointRequestDtoValidator.ValidateAndThrowAsync(checkpointDto);
+
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(competitionId), x => x.Checkpoints);
         if (competition is null) throw new NotFoundException();
 
-        if (!Enum.TryParse<DistanceUnit>(checkpointDto.TrackPointUnit, out var distanceUnit)) throw new ValidationException("Distance unit is incorrect");
+        if (!Enum.TryParse<DistanceUnit>(checkpointDto.TrackPointUnit, out var distanceUnit)) throw new Common.Exceptions.ValidationException("Distance unit is incorrect");
 
         try
         {
@@ -118,7 +126,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (CheckpointAlreadyExistsException)
         {
-            throw new ValidationException("Cannot add a checkpoint because checkpoint in this place already exists");
+            throw new Common.Exceptions.ValidationException("Cannot add a checkpoint because checkpoint in this place already exists");
         }
 
         await _competitionRepository.UpdateAsync(competition);
@@ -136,7 +144,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (CheckpointNotExistsException)
         {
-            throw new ValidationException("Cannot remove a checkpoint because checkpoint does not exist");
+            throw new Common.Exceptions.ValidationException("Cannot remove a checkpoint because checkpoint does not exist");
         }
 
         await _competitionRepository.UpdateAsync(competition);

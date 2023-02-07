@@ -1,6 +1,7 @@
 ﻿using Bz.Fott.Administration.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.AccessControl;
 
 namespace Bz.Fott.Administration.WebAPI.ExceptionsHandling;
 
@@ -20,6 +21,7 @@ internal class ErrorObjectResult : ObjectResult
         switch (exception)
         {
             case ValidationException:
+            case FluentValidation.ValidationException:
                 httpStatusCode = (int)HttpStatusCode.BadRequest;
                 break;
             case NotFoundException:
