@@ -4,7 +4,7 @@ public record Distance
 {
     public Distance(decimal amount, DistanceUnit unit)
     {
-        if (amount < 0) throw new ArgumentException("Amount of distance must be greater than or equals to 0", nameof(amount));
+        if (amount < 0) throw new DistanceAmountInvalidException();
 
         Amount = amount;
         Unit = unit;

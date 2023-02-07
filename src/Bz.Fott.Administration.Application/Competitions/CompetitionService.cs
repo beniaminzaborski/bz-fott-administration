@@ -33,17 +33,36 @@ internal class CompetitionService : ICompetitionService
     {
         await _createCompetitionDtoValidator.ValidateAndThrowAsync(dto);
 
-        var competition = new Competition(
-            CompetitionId.From(Guid.NewGuid()),
-            DistanceHelper.From(dto.Distance.Amount, dto.Distance.Unit),
-            dto.StartAt,
-            dto.MaxCompetitors,
-            new CompetitionPlace(dto.Place.City, new Geolocalization(dto.Place.Latitude, dto.Place.Longitute)));
+        try
+        {
+            var competition = new Competition(
+                CompetitionId.From(Guid.NewGuid()),
+                DistanceHelper.From(dto.Distance.Amount, dto.Distance.Unit),
+                dto.StartAt,
+                dto.MaxCompetitors,
+                new CompetitionPlace(dto.Place.City, new Geolocalization(dto.Place.Latitude, dto.Place.Longitute)));
 
-        await _competitionRepository.CreateAsync(competition);
-        await _unitOfWork.CommitAsync();
+            await _competitionRepository.CreateAsync(competition);
+            await _unitOfWork.CommitAsync();
 
-        return competition.Id.Value;
+            return competition.Id.Value;
+        }
+        catch (CompetitionPlaceCityInvalidException)
+        {
+            throw new Common.Exceptions.ValidationException("City name must me not empty and lenght must be less than 100 characters");
+        }
+        catch (GeolocalizationLatitudeInvalidException)
+        {
+            throw new Common.Exceptions.ValidationException("Latitude must be between -90.0000000 and 90.0000000");
+        }
+        catch (GeolocalizationLongitudeInvalidException)
+        {
+            throw new Common.Exceptions.ValidationException("Longitude must be between -180.0000000 and 180.0000000");
+        }
+        catch (DistanceAmountInvalidException)
+        {
+            throw new Common.Exceptions.ValidationException("Cannot add a checkpoint because distance amount is invalid");
+        }
     }
 
     public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
@@ -127,6 +146,10 @@ internal class CompetitionService : ICompetitionService
         catch (CheckpointAlreadyExistsException)
         {
             throw new Common.Exceptions.ValidationException("Cannot add a checkpoint because checkpoint in this place already exists");
+        }
+        catch (DistanceAmountInvalidException)
+        {
+            throw new Common.Exceptions.ValidationException("Cannot add a checkpoint because distance amount is invalid");
         }
 
         await _competitionRepository.UpdateAsync(competition);

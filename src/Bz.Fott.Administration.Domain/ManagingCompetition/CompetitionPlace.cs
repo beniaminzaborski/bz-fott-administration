@@ -6,6 +6,8 @@ public record CompetitionPlace
 
     public CompetitionPlace(string city, Geolocalization localization)
     {
+        if (string.IsNullOrEmpty(city) || city.Length > 100) throw new CompetitionPlaceCityInvalidException();
+
         City = city;
         Localization = localization;
     }
