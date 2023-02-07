@@ -1,6 +1,3 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class CompetitionRegistrationCompletedIntegrationEvent
-{
-
-}
+public sealed record CompetitionRegistrationCompletedIntegrationEvent(Guid id) { }

@@ -74,7 +74,7 @@ internal class CompetitionService : ICompetitionService
 
     public async Task OpenRegistrationAsync(Guid id)
     {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
+        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
         if (competition is null) throw new NotFoundException();
 
         try
@@ -92,7 +92,7 @@ internal class CompetitionService : ICompetitionService
 
     public async Task CompleteRegistrationAsync(Guid id)
     {
-        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id));
+        var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
         if (competition is null) throw new NotFoundException();
 
         try

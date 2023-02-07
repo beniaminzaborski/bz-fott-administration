@@ -18,13 +18,10 @@ public class CompetitionRegistrationCompletedHandler : INotificationHandler<Comp
         _publishEndpoint = publishEndpoint;
     }
 
-    public async Task Handle(CompetitionRegistrationCompleted notification, CancellationToken cancellationToken)
+    public async Task Handle(CompetitionRegistrationCompleted domainEvent, CancellationToken cancellationToken)
     {
         _logger.LogInformation("<Application Layer> Competition registration completed!");
 
-        await _publishEndpoint.Publish(new CompetitionRegistrationCompletedIntegrationEvent 
-        { 
-            
-        });
+        await _publishEndpoint.Publish(new CompetitionRegistrationCompletedIntegrationEvent(domainEvent.Id.Value));
     }
 }

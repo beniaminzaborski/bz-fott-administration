@@ -1,6 +1,11 @@
-﻿namespace Bz.Fott.Administration.Application.Competitions;
+﻿using Bz.Fott.Administration.Domain.ManagingCompetition;
 
-public class CompetitionOpenedForRegistrationIntegrationEvent
-{
+namespace Bz.Fott.Administration.Application.Competitions;
 
-}
+public sealed record CompetitionOpenedForRegistrationIntegrationEvent(
+    Guid Id,
+    CompetitionPlaceDto Place,
+    DistanceDto Distance,
+    DateTime StartAt,
+    int MaxCompetitors,
+    IEnumerable<CheckpointDto> Checkpoints) { }

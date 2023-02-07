@@ -2,6 +2,6 @@
 
 namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
-public class CompetitionRegistrationCompleted : IDomainEvent
-{
-}
+public sealed record CompetitionRegistrationCompleted(
+    CompetitionId Id)
+    : IDomainEvent { }

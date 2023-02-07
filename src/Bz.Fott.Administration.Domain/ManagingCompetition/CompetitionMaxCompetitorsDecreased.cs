@@ -2,7 +2,7 @@
 
 namespace Bz.Fott.Administration.Domain.ManagingCompetition;
 
-public class CompetitionMaxCompetitorsDecreased : IDomainEvent
-{
-
-}
+public sealed record CompetitionMaxCompetitorsDecreased(
+    CompetitionId Id,
+    int MaxCompetitors)
+    : IDomainEvent { }

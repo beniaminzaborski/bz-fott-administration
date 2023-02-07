@@ -57,7 +57,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         if (Status != CompetitionStatus.Draft) throw new CannotOpenRegistrationException();
 
         Status = CompetitionStatus.OpenedForRegistration;
-        QueueDomainEvent(new CompetitionOpenedForRegistration());
+        QueueDomainEvent(new CompetitionOpenedForRegistration(Id, Place, Distance, StartAt, MaxCompetitors, Checkpoints));
     }
 
     public void CompleteRegistration() 
@@ -65,7 +65,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         if (Status != CompetitionStatus.OpenedForRegistration) throw new CannotCompleteRegistrationException();
 
         Status = CompetitionStatus.RegistrationCompleted;
-        QueueDomainEvent(new CompetitionRegistrationCompleted());
+        QueueDomainEvent(new CompetitionRegistrationCompleted(Id));
     }
 
     public void ChangeMaxCompetitors(int maxCompetitors)
@@ -75,13 +75,13 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
             && maxCompetitors > MaxCompetitors)
         { 
             MaxCompetitors = maxCompetitors;
-            QueueDomainEvent(new CompetitionMaxCompetitorsIncreased());
+            QueueDomainEvent(new CompetitionMaxCompetitorsIncreased(Id, MaxCompetitors));
         }
         else if (Status == CompetitionStatus.Draft
             && maxCompetitors < MaxCompetitors)
         {
             MaxCompetitors = maxCompetitors;
-            QueueDomainEvent(new CompetitionMaxCompetitorsDecreased());
+            QueueDomainEvent(new CompetitionMaxCompetitorsDecreased(Id, MaxCompetitors));
         }
         else
             throw new CompetitionMaxCompetitorsChangeNotAllowedException();
