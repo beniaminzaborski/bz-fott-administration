@@ -61,7 +61,7 @@ internal class CompetitionService : ICompetitionService
         }
         catch (DistanceAmountInvalidException)
         {
-            throw new Common.Exceptions.ValidationException("Cannot add a checkpoint because distance amount is invalid");
+            throw new Common.Exceptions.ValidationException("Distance amount is invalid");
         }
     }
 
