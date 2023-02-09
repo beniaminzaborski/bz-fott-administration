@@ -21,7 +21,7 @@ public static class DependencyInjection
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("Administration");
+        var connectionString = configuration.GetConnectionString("Postgres");
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -63,15 +63,9 @@ public static class DependencyInjection
         {
             x.SetKebabCaseEndpointNameFormatter();
 
-            x.UsingRabbitMq((context, cfg) =>
+            x.UsingAzureServiceBus((context, cfg) =>
             {
-                var rabbitSettings = configuration.GetRequiredSection("RabbitMQ")!;
-
-                cfg.Host(rabbitSettings.GetValue<string>("Host"), rabbitSettings.GetValue<ushort>("Port"), rabbitSettings.GetValue<string>("VirtualHost"), h =>
-                {
-                    h.Username(rabbitSettings.GetValue<string>("Username"));
-                    h.Password(rabbitSettings.GetValue<string>("Password"));
-                });
+                cfg.Host(configuration.GetConnectionString("AzureServiceBus"));
 
                 cfg.ConfigureEndpoints(context);
             });

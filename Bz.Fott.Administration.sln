@@ -17,21 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bz.Fott.Administration.Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bz.Fott.Administration.Domain.UnitTests", "test\Bz.Fott.Administration.Domain.UnitTests\Bz.Fott.Administration.Domain.UnitTests.csproj", "{63956837-96BC-4657-B4AF-8A760C71BD7D}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{AEAC2DA5-169E-49D5-9382-D7D63EFC17F5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deploy", "deploy", "{9C94F282-3B88-454F-959B-B64C34CA6D7C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{B004A675-99C3-4CC8-82EB-21C2ED2F43BD}"
-	ProjectSection(SolutionItems) = preProject
-		deploy\sql\create_databases.sql = deploy\sql\create_databases.sql
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "otel", "otel", "{58F4279A-A649-4B12-BAC8-C3368A370197}"
-	ProjectSection(SolutionItems) = preProject
-		deploy\otel\otel-collector-config.yaml = deploy\otel\otel-collector-config.yaml
-		deploy\otel\prometheus.yaml = deploy\otel\prometheus.yaml
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,10 +43,6 @@ Global
 		{63956837-96BC-4657-B4AF-8A760C71BD7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63956837-96BC-4657-B4AF-8A760C71BD7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63956837-96BC-4657-B4AF-8A760C71BD7D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AEAC2DA5-169E-49D5-9382-D7D63EFC17F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AEAC2DA5-169E-49D5-9382-D7D63EFC17F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AEAC2DA5-169E-49D5-9382-D7D63EFC17F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AEAC2DA5-169E-49D5-9382-D7D63EFC17F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,8 +53,6 @@ Global
 		{6784B6F2-376E-4697-9E0B-F3DC54228422} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{60F3E6E2-11F1-4472-818D-98C4EADA7193} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{63956837-96BC-4657-B4AF-8A760C71BD7D} = {EC1BC12C-0983-41E3-B438-0F8C616A3AF8}
-		{B004A675-99C3-4CC8-82EB-21C2ED2F43BD} = {9C94F282-3B88-454F-959B-B64C34CA6D7C}
-		{58F4279A-A649-4B12-BAC8-C3368A370197} = {9C94F282-3B88-454F-959B-B64C34CA6D7C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97F31DEE-3931-45EB-9080-33C0E8B6E949}

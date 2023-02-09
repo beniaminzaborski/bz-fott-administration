@@ -5,6 +5,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry;
 using Npgsql;
 using Microsoft.Extensions.Configuration;
+using Azure.Monitor.OpenTelemetry.Exporter;
 
 namespace Bz.Fott.Administration.WebAPI;
 
@@ -21,8 +22,10 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddTelemetry(this IServiceCollection services, string serviceName, string serviceVersion)
+    public static IServiceCollection AddObservability(this IServiceCollection services, IConfiguration config, string serviceName, string serviceVersion)
     {
+        var appInsightsConnectionString = config.GetConnectionString("ApplicationInsights");
+
         return services
             .AddOpenTelemetry()
             .WithTracing(builder => builder
@@ -32,14 +35,14 @@ public static class DependencyInjection
                 .AddNpgsql()
                 .AddMassTransitInstrumentation().AddSource("MassTransit")
                 .AddConsoleExporter()
-                .AddOtlpExporter())
+                .AddAzureMonitorTraceExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
             .WithMetrics(builder => builder
                 .AddMeter(serviceName)
                 .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, serviceVersion: serviceVersion))
                 .AddRuntimeInstrumentation()
                 .AddAspNetCoreInstrumentation()
                 .AddConsoleExporter()
-                .AddOtlpExporter())
+                .AddAzureMonitorMetricExporter(cfg => cfg.ConnectionString = appInsightsConnectionString))
             .StartWithHost()
             .Services;
     }

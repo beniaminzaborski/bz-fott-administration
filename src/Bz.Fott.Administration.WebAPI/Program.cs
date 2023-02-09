@@ -1,7 +1,6 @@
 using Bz.Fott.Administration.Application;
 using Bz.Fott.Administration.Infrastructure;
 using Bz.Fott.Administration.WebAPI;
-using Microsoft.Extensions.Configuration;
 
 const string serviceName = "Fott-Administration";
 const string serviceVersion = "1.0.0";
@@ -12,7 +11,7 @@ var config = builder.Configuration;
 
 // Add services to the container.
 services
-    .AddTelemetry(serviceName, serviceVersion)
+    .AddObservability(config, serviceName, serviceVersion)
     .AddApplication()
     .AddInfrastructure(config)
     .AddEndpointsApiExplorer()
