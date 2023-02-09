@@ -17,6 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bz.Fott.Administration.Infr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bz.Fott.Administration.Domain.UnitTests", "test\Bz.Fott.Administration.Domain.UnitTests\Bz.Fott.Administration.Domain.UnitTests.csproj", "{63956837-96BC-4657-B4AF-8A760C71BD7D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{668DE3BA-AFC5-4737-9713-EDA4407A0A3F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{61B27004-9D80-4582-B8FC-0B89CB80A8C3}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-deploy.yml = .github\workflows\build-and-deploy.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +60,7 @@ Global
 		{6784B6F2-376E-4697-9E0B-F3DC54228422} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{60F3E6E2-11F1-4472-818D-98C4EADA7193} = {1C3C3228-CF7D-4CD0-8CC6-659109DF05FE}
 		{63956837-96BC-4657-B4AF-8A760C71BD7D} = {EC1BC12C-0983-41E3-B438-0F8C616A3AF8}
+		{61B27004-9D80-4582-B8FC-0B89CB80A8C3} = {668DE3BA-AFC5-4737-9713-EDA4407A0A3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {97F31DEE-3931-45EB-9080-33C0E8B6E949}
