@@ -1,8 +1,5 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class CompetitionPlaceDto
+public record CompetitionPlaceDto(string City, decimal Latitude, decimal Longitute)
 {
-    public string City { get; set; } = null!;
-    public decimal Latitude { get; set; }
-    public decimal Longitute { get; set; }
 }

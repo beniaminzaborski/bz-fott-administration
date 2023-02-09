@@ -1,7 +1,5 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class AddCheckpointRequestDto
+public record AddCheckpointRequestDto(decimal TrackPointAmount, string TrackPointUnit) 
 {
-    public decimal TrackPointAmount { get; set; }
-    public string TrackPointUnit { get; set; }
 }

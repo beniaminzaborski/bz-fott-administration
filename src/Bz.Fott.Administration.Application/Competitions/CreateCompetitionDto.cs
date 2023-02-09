@@ -1,9 +1,9 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class CreateCompetitionDto
+public record CreateCompetitionDto(
+    DateTime StartAt,
+    DistanceDto Distance,
+    CompetitionPlaceDto Place,
+    int MaxCompetitors)
 {
-    public DateTime StartAt { get; set; }
-    public DistanceDto Distance { get; set; } = null!;
-    public CompetitionPlaceDto Place { get; set; } = null!;
-    public int MaxCompetitors { get; set; }
 }

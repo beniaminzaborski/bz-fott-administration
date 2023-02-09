@@ -1,6 +1,5 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class ChangeMaxCompetitorsRequestDto
+public record ChangeMaxCompetitorsRequestDto(int MaxCompetitors)
 {
-    public int MaxCompetitors { get; set; }
 }

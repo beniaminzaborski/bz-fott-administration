@@ -1,8 +1,5 @@
 ﻿namespace Bz.Fott.Administration.Application.Competitions;
 
-public class CheckpointDto
+public record CheckpointDto(Guid Id, decimal TrackPointAmount, string TrackPointUnit)
 {
-    public Guid Id { get; set; }
-    public decimal TrackPointAmount { get; set; }
-    public string TrackPointUnit { get; set; }
 }
