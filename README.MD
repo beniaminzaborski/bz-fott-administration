@@ -1,5 +1,5 @@
 # Feet On The Tarmac - Administration
-![Project logo](./docs/fott-logo.png)
+![Project logo](./doc/fott-logo.png)
 
 ## Table of contents
 * [General info](#general-info)
