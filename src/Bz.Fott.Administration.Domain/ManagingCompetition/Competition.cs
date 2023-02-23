@@ -43,6 +43,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
     {
         if (_checkpoints.Any(c => c.TrackPoint.Equals(checkpoint.TrackPoint))) throw new CheckpointAlreadyExistsException();
         _checkpoints.Add(checkpoint);
+        QueueDomainEvent(new CompetitionCheckpointAdded(Id, checkpoint.Id, checkpoint.TrackPoint));
     }
 
     public void RemoveCheckpoint(CheckpointId checkpointId)
@@ -50,6 +51,7 @@ public class Competition : Entity<CompetitionId>, IAggregateRoot
         var checkpoint = _checkpoints.FirstOrDefault(c => c.Id.Equals(checkpointId));
         if(checkpoint is null) throw new CheckpointNotExistsException();
         _checkpoints.Remove(checkpoint);
+        QueueDomainEvent(new CompetitionCheckpointRemoved(Id, checkpoint.Id, checkpoint.TrackPoint));
     }
 
     public void OpenRegistration()
