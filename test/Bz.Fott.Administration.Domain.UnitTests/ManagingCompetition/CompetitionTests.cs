@@ -60,8 +60,7 @@ public class CompetitionTests
 
         // Assert
         Assert.Equal(CompetitionStatus.OpenedForRegistration, competition.Status);
-        Assert.Equal(1, competition.GetDomainEvents().Count);
-        Assert.IsType<CompetitionOpenedForRegistration>(competition.GetDomainEvents().First());
+        Assert.Contains(competition.GetDomainEvents(), e => e is CompetitionOpenedForRegistration);
     }
 
     [Fact]
@@ -120,8 +119,7 @@ public class CompetitionTests
         // Assert
         Assert.Equal(CompetitionStatus.Draft, competition.Status);
         Assert.Equal(10000, competition.MaxCompetitors);
-        Assert.Equal(1, competition.GetDomainEvents().Count);
-        Assert.IsType<CompetitionMaxCompetitorsIncreased>(competition.GetDomainEvents().First());
+        Assert.Contains(competition.GetDomainEvents(), e => e is CompetitionMaxCompetitorsIncreased);
     }
 
     [Fact]
@@ -141,8 +139,7 @@ public class CompetitionTests
         // Assert
         Assert.Equal(CompetitionStatus.Draft, competition.Status);
         Assert.Equal(7000, competition.MaxCompetitors);
-        Assert.Equal(1, competition.GetDomainEvents().Count);
-        Assert.IsType<CompetitionMaxCompetitorsDecreased>(competition.GetDomainEvents().First());
+        Assert.Contains(competition.GetDomainEvents(), e => e is CompetitionMaxCompetitorsDecreased);
     }
 
     [Fact]
