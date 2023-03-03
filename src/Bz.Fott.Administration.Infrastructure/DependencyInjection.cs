@@ -1,4 +1,5 @@
 ﻿using Bz.Fott.Administration.Application.Common;
+using Bz.Fott.Administration.Infrastructure.Messaging;
 using Bz.Fott.Administration.Infrastructure.Persistence;
 using Bz.Fott.Administration.Infrastructure.Persistence.Common;
 using FluentMigrator.Runner;
@@ -59,7 +60,9 @@ public static class DependencyInjection
 
     private static IServiceCollection AddMessageBus(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddMassTransit(x =>
+        return services
+            .AddSingleton<IEntityNameFormatter, ShortTypeEntityNameFormatter>()
+            .AddMassTransit(x =>
         {
             x.SetKebabCaseEndpointNameFormatter();
 
@@ -68,6 +71,8 @@ public static class DependencyInjection
                 cfg.Host(configuration.GetConnectionString("AzureServiceBus"));
 
                 cfg.ConfigureEndpoints(context);
+
+                cfg.MessageTopology.SetEntityNameFormatter(context.GetRequiredService<IEntityNameFormatter>());
             });
         });
     }
