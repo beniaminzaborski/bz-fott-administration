@@ -23,6 +23,14 @@ public class CompetitionController : ControllerBase
         return CreatedAtAction(nameof(GetAsync), new { id }, null);
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(CompetitionDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var result = await _competitionService.GetAllCompetitionAsync();
+        return Ok(result);
+    }
+
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CompetitionDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]

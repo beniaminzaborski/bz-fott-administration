@@ -6,7 +6,9 @@ namespace Bz.Fott.Administration.Application.Competitions;
 public interface ICompetitionService : IApplicationService
 {
     Task<Guid> CreateCompetitionAsync(CreateCompetitionDto dto);
-    
+
+    Task<IEnumerable<CompetitionDto>> GetAllCompetitionAsync();
+
     Task<CompetitionDto> GetCompetitionAsync(Guid id);
 
     Task OpenRegistrationAsync(Guid id);

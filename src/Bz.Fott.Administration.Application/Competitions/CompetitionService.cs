@@ -65,6 +65,12 @@ internal class CompetitionService : ICompetitionService
         }
     }
 
+    public async Task<IEnumerable<CompetitionDto>> GetAllCompetitionAsync()
+    {
+        var competitions = await _competitionRepository.GetAllAsync(i => i.Checkpoints);
+        return _mapper.Map<IEnumerable<CompetitionDto>>(competitions);
+    }
+
     public async Task<CompetitionDto> GetCompetitionAsync(Guid id)
     {
         var competition = await _competitionRepository.GetAsync(CompetitionId.From(id), i => i.Checkpoints);
